@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  @apply text-gray-900 bg-gray-100;
+}
+
+#root {
+  @apply absolute inset-0;
+}
+
+.pagination-button {
+  @apply p-1 w-10 h-10 border rounded bg-white hover:bg-gray-100 transition-colors duration-100;
+}
