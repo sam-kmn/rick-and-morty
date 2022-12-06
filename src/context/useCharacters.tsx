@@ -1,5 +1,5 @@
-import { useState, useEffect, createContext, ReactNode, useContext, SetStateAction, Dispatch, useMemo } from 'react'
-import { Character } from '../interfaces'
+import { useState, useEffect, createContext, ReactNode, useContext, SetStateAction, Dispatch } from 'react'
+import splitToChunks from '../utils/splitToChunks'
 
 const charactersContext = createContext<{
   characters: any[]
@@ -9,8 +9,7 @@ const charactersContext = createContext<{
   lastPage: number
   setPage: Dispatch<SetStateAction<number>>
   apiPage: number | undefined
-  search: string
-  setSearch: Dispatch<SetStateAction<string>>
+  submitSearch: (text: string) => void
 }>({
   characters: [],
   loading: true,
@@ -19,37 +18,33 @@ const charactersContext = createContext<{
   lastPage: 1,
   setPage: () => {},
   apiPage: undefined,
-  search: '',
-  setSearch: () => {},
+  submitSearch: () => {},
 })
 
 export const CharactersProvider = ({ children }: { children: ReactNode }) => {
   const [characters, setCharacters] = useState<any>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
-
   const [apiPage, setApiPage] = useState<number | undefined>(undefined)
-
   const [search, setSearch] = useState('')
 
-  const splitToChunks = (data: Character[], chunkSize = 5) => {
-    const chunks = []
-    for (let i = 0; i < data.length; i += chunkSize) {
-      const chunk = data.slice(i, i + chunkSize)
-      chunks.push(chunk)
-    }
-    return chunks
+  const submitSearch = (text: string) => {
+    setSearch(text)
+    setPage(1)
+    setApiPage(undefined)
+    setCharacters([])
   }
 
   const fetchCharacters = async (nextPage: number) => {
-    console.log('fetch')
     setLoading(true)
 
+    let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
+    if (search) url += `&name=${search}`
+
     try {
-      const response = await fetch(`https://rickandmortyapi.com/api/character/?page=${nextPage}`)
+      const response = await fetch(url)
       const data = await response.json()
       const chunks = splitToChunks(data.results)
       setCharacters(chunks)
@@ -66,10 +61,10 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const nextPage = Math.ceil(page / 4)
-    if (apiPage === undefined || nextPage > apiPage) fetchCharacters(nextPage)
-  }, [page])
+    if (apiPage === undefined || nextPage !== apiPage) fetchCharacters(nextPage)
+  }, [page, search])
 
-  return <charactersContext.Provider value={{ characters, loading, error, page, setPage, lastPage, search, setSearch, apiPage }}>{children}</charactersContext.Provider>
+  return <charactersContext.Provider value={{ characters, loading, error, page, setPage, lastPage, submitSearch, apiPage }}>{children}</charactersContext.Provider>
 }
 
 export const useCharacters = () => {

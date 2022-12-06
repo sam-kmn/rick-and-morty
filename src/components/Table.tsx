@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useCharacters } from '../context/useCharacters'
-import { Character } from '../interfaces'
+import { Character } from '../utils/interfaces'
 
 const Table = () => {
   const { characters, page, apiPage } = useCharacters()
