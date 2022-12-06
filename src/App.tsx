@@ -1,5 +1,6 @@
 import Pagination from './components/Pagination'
 import SearchBar from './components/SearchBar'
+import SelectSpecies from './components/SelectSpecies'
 import Table from './components/Table'
 
 function App() {
@@ -9,9 +10,7 @@ function App() {
 
       <div className="flex gap-10">
         <SearchBar />
-        <select name="" id="" className="bg-white border rounded p-3">
-          <option value="">Human</option>
-        </select>
+        <SelectSpecies />
       </div>
       <Table />
       <Pagination />

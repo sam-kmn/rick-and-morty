@@ -9,7 +9,9 @@ const charactersContext = createContext<{
   lastPage: number
   setPage: Dispatch<SetStateAction<number>>
   apiPage: number | undefined
-  submitSearch: (text: string) => void
+  submitSearch: (payload: string) => void
+  species: string
+  submitSpecies: (payload: string) => void
 }>({
   characters: [],
   loading: true,
@@ -19,6 +21,8 @@ const charactersContext = createContext<{
   setPage: () => {},
   apiPage: undefined,
   submitSearch: () => {},
+  species: 'human',
+  submitSpecies: () => {},
 })
 
 export const CharactersProvider = ({ children }: { children: ReactNode }) => {
@@ -29,12 +33,23 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
   const [lastPage, setLastPage] = useState(1)
   const [apiPage, setApiPage] = useState<number | undefined>(undefined)
   const [search, setSearch] = useState('')
+  const [species, setSpecies] = useState('')
 
-  const submitSearch = (text: string) => {
-    setSearch(text)
+  const resetState = () => {
     setPage(1)
     setApiPage(undefined)
     setCharacters([])
+  }
+
+  const submitSearch = (payload: string) => {
+    setSearch(payload)
+    setSpecies('')
+    resetState()
+  }
+
+  const submitSpecies = (payload: string) => {
+    setSpecies(payload)
+    resetState()
   }
 
   const fetchCharacters = async (nextPage: number) => {
@@ -42,6 +57,7 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
 
     let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
     if (search) url += `&name=${search}`
+    else if (species) url += `&species=${species}`
 
     try {
       const response = await fetch(url)
@@ -62,9 +78,9 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const nextPage = Math.ceil(page / 4)
     if (apiPage === undefined || nextPage !== apiPage) fetchCharacters(nextPage)
-  }, [page, search])
+  }, [page, search, species])
 
-  return <charactersContext.Provider value={{ characters, loading, error, page, setPage, lastPage, submitSearch, apiPage }}>{children}</charactersContext.Provider>
+  return <charactersContext.Provider value={{ characters, loading, error, page, setPage, lastPage, submitSearch, apiPage, species, submitSpecies }}>{children}</charactersContext.Provider>
 }
 
 export const useCharacters = () => {
