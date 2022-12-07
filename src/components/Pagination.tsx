@@ -4,7 +4,7 @@ const PaginationButton = ({ to }: { to: number }) => {
   const { page, setPage, lastPage } = useCharacters()
   if (to > lastPage || to < 1) return null
   return (
-    <button onClick={() => setPage(to)} className={(to === page ? '!bg-gray-200' : '') + ' pagination-button'}>
+    <button onClick={() => setPage(to)} className={(to === page ? '!bg-secondary-10' : '') + ' pagination-button'}>
       {to}
     </button>
   )
@@ -37,7 +37,7 @@ const Pagination = () => {
         <button onClick={increasePage} className="pagination-button bi bi-chevron-right"></button>
       </div>
     )
-  else
+  
     return (
       <div className="flex items-center justify-end gap-1">
         <button onClick={decreasePage} className="pagination-button bi bi-chevron-left"></button>

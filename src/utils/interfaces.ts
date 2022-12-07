@@ -4,7 +4,7 @@ import { allSpecies } from '../components/SelectSpecies'
 export interface Character {
   id: number
   name: string
-  species: keyof typeof allSpecies
+  species: typeof allSpecies[number]
   status: 'Alive' | 'Dead' | 'unknown'
   gender: 'Female' | 'Male' | 'Genderless' | 'unknown'
   origin: {

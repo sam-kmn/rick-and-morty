@@ -1,7 +1,6 @@
 import { useState, useEffect, createContext, ReactNode, useContext } from 'react'
+import { secureFetch, splitToChunks } from '../utils/helpers'
 import { CharactersContext } from '../utils/interfaces'
-import secureFetch from '../utils/secureFetch'
-import splitToChunks from '../utils/splitToChunks'
 
 const charactersContext = createContext<CharactersContext>({
   characters: [],

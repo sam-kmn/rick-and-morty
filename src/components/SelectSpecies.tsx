@@ -5,7 +5,7 @@ export const allSpecies = ['Alien', 'Human', 'Robot', 'Animal', 'Disease', 'Huma
 const SelectSpecies = () => {
   const { species, setSpecies } = useCharacters()
   return (
-    <select value={species} onChange={(e) => setSpecies(e.target.value)} className="flex-1 bg-white border rounded  p-3">
+    <select value={species} onChange={(e) => setSpecies(e.target.value)} className="flex-1 bg-white text-primary-anthracite-80 border border-secondary-40 rounded-md  p-3">
       <option value="">Species</option>
       {allSpecies.map((specie: string) => (
         <option key={specie} value={specie}>
