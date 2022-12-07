@@ -28,7 +28,7 @@ const charactersContext = createContext<{
 export const CharactersProvider = ({ children }: { children: ReactNode }) => {
   const [characters, setCharacters] = useState<any>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [error, setError] = useState(undefined)
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
   const [apiPage, setApiPage] = useState<number | undefined>(undefined)
@@ -39,16 +39,18 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
     setPage(1)
     setApiPage(undefined)
     setCharacters([])
+    // console.log('resetState')
   }
 
   const submitSearch = (payload: string) => {
     setSearch(payload)
-    setSpecies('')
+    // setSpecies('')
     resetState()
   }
 
   const submitSpecies = (payload: string) => {
     setSpecies(payload)
+    // setSearch('')
     resetState()
   }
 
@@ -57,18 +59,21 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
 
     let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
     if (search) url += `&name=${search}`
-    else if (species) url += `&species=${species}`
+    if (species) url += `&species=${species}`
 
     try {
       const response = await fetch(url)
+      console.log(response)
+      if (!response.ok) throw Error(response.statusText)
       const data = await response.json()
       const chunks = splitToChunks(data.results)
       setCharacters(chunks)
       setLastPage(Math.trunc(data.info.count / 5))
       setApiPage(nextPage)
       //
-    } catch (error) {
-      setError(error as string)
+    } catch (error: any) {
+      setError(error)
+      console.log(error)
       //
     } finally {
       setLoading(false)

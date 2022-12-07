@@ -1,7 +1,8 @@
 import { useCharacters } from '../context/useCharacters'
 
 const PaginationButton = ({ to }: { to: number }) => {
-  const { page, setPage } = useCharacters()
+  const { page, setPage, lastPage } = useCharacters()
+  if (to > lastPage || to < 1) return null
   return (
     <button onClick={() => setPage(to)} className={(to === page ? '!bg-gray-200' : '') + ' pagination-button'}>
       {to}
@@ -13,15 +14,16 @@ const Pagination = () => {
   const { page, setPage, lastPage } = useCharacters()
   const increasePage = () => page < lastPage && setPage(page + 1)
   const decreasePage = () => page > 1 && setPage(page - 1)
-
-  if (page < 3)
+  if (lastPage < 3)
     return (
       <div className="flex items-center justify-end gap-1">
-        <div className="mr-10">Page: {page}</div>
-
-        <button onClick={decreasePage} className="pagination-button">
-          -
-        </button>
+        <PaginationButton to={1} />
+      </div>
+    )
+  if (page < 3 || page > lastPage - 3)
+    return (
+      <div className="flex items-center justify-end gap-1">
+        <button onClick={decreasePage} className="pagination-button bi bi-chevron-left"></button>
 
         <PaginationButton to={1} />
         <PaginationButton to={2} />
@@ -33,19 +35,13 @@ const Pagination = () => {
         <PaginationButton to={lastPage - 1} />
         <PaginationButton to={lastPage} />
 
-        <button onClick={increasePage} className="pagination-button">
-          +
-        </button>
+        <button onClick={increasePage} className="pagination-button bi bi-chevron-right"></button>
       </div>
     )
   else
     return (
       <div className="flex items-center justify-end gap-1">
-        <div>Page: {page}</div>
-
-        <button onClick={decreasePage} className="pagination-button">
-          -
-        </button>
+        <button onClick={decreasePage} className="pagination-button bi bi-chevron-left"></button>
         <button onClick={() => setPage(1)} className="pagination-button">
           1
         </button>
@@ -63,9 +59,7 @@ const Pagination = () => {
         <button onClick={() => setPage(lastPage)} className="pagination-button">
           {lastPage}
         </button>
-        <button onClick={increasePage} className="pagination-button">
-          +
-        </button>
+        <button onClick={increasePage} className="pagination-button bi bi-chevron-right"></button>
       </div>
     )
 }

@@ -3,7 +3,7 @@ import { useCharacters } from '../context/useCharacters'
 const SelectSpecies = () => {
   const { species, submitSpecies } = useCharacters()
   return (
-    <select value={species} onChange={(e) => submitSpecies(e.target.value)} className="bg-white border rounded w-40 p-3">
+    <select value={species} onChange={(e) => submitSpecies(e.target.value)} className="flex-1 bg-white border rounded  p-3">
       <option value="">Species</option>
       <option value="Alien">Alien</option>
       <option value="Human">Human</option>
