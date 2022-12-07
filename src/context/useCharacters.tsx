@@ -1,28 +1,20 @@
-import { useState, useEffect, createContext, ReactNode, useContext, SetStateAction, Dispatch } from 'react'
+import { useState, useEffect, createContext, ReactNode, useContext } from 'react'
+import { CharactersContext } from '../utils/interfaces'
+import secureFetch from '../utils/secureFetch'
 import splitToChunks from '../utils/splitToChunks'
 
-const charactersContext = createContext<{
-  characters: any[]
-  loading: boolean
-  error: string
-  page: number
-  lastPage: number
-  setPage: Dispatch<SetStateAction<number>>
-  apiPage: number | undefined
-  submitSearch: (payload: string) => void
-  species: string
-  submitSpecies: (payload: string) => void
-}>({
+const charactersContext = createContext<CharactersContext>({
   characters: [],
   loading: true,
   error: '',
   page: 1,
   lastPage: 1,
-  setPage: () => {},
+  search: '',
+  species: '',
   apiPage: undefined,
-  submitSearch: () => {},
-  species: 'human',
-  submitSpecies: () => {},
+  setPage: () => {},
+  setSearch: () => {},
+  setSpecies: () => {},
 })
 
 export const CharactersProvider = ({ children }: { children: ReactNode }) => {
@@ -39,53 +31,38 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
     setPage(1)
     setApiPage(undefined)
     setCharacters([])
-  }
-
-  const submitSearch = (payload: string) => {
-    setSearch(payload)
-    resetState()
-  }
-
-  const submitSpecies = (payload: string) => {
-    setSpecies(payload)
-    resetState()
-  }
-
-  const secureFetch = async (url: string) => {
-    try {
-      const response = await fetch(url)
-      if (!response.ok) return [null, response.statusText]
-      const data = await response.json()
-      return [data, null]
-    } catch (error) {
-      return [null, error]
-    }
+    setError('')
   }
 
   const fetchCharacters = async (nextPage: number) => {
     setLoading(true)
-    setError('')
 
     let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
     if (search) url += `&name=${search}`
     if (species) url += `&species=${species}`
 
     const [data, err] = await secureFetch(url)
-    if (err) return setError(err)
 
-    const chunks = splitToChunks(data.results)
-    setCharacters(chunks)
-    setLastPage(Math.trunc(data.info.count / 5))
+    if (err) setError(err)
+    else {
+      const chunks = splitToChunks(data.results)
+      setCharacters(chunks)
+      setLastPage(Math.ceil(data.info.count / 5))
+    }
     setApiPage(nextPage)
     setLoading(false)
   }
 
+  useEffect(() => resetState(), [search, species])
+
   useEffect(() => {
     const nextPage = Math.ceil(page / 4)
     if (apiPage === undefined || nextPage !== apiPage) fetchCharacters(nextPage)
-  }, [page, search, species])
+  }, [page, apiPage])
 
-  return <charactersContext.Provider value={{ characters, loading, error, page, setPage, lastPage, submitSearch, apiPage, species, submitSpecies }}>{children}</charactersContext.Provider>
+  const providerValues = { characters, loading, error, page, setPage, lastPage, apiPage, search, setSearch, species, setSpecies }
+
+  return <charactersContext.Provider value={providerValues}>{children}</charactersContext.Provider>
 }
 
 export const useCharacters = () => {
