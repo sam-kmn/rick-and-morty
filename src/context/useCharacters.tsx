@@ -28,7 +28,7 @@ const charactersContext = createContext<{
 export const CharactersProvider = ({ children }: { children: ReactNode }) => {
   const [characters, setCharacters] = useState<any>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(undefined)
+  const [error, setError] = useState('')
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
   const [apiPage, setApiPage] = useState<number | undefined>(undefined)
@@ -39,45 +39,45 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
     setPage(1)
     setApiPage(undefined)
     setCharacters([])
-    // console.log('resetState')
   }
 
   const submitSearch = (payload: string) => {
     setSearch(payload)
-    // setSpecies('')
     resetState()
   }
 
   const submitSpecies = (payload: string) => {
     setSpecies(payload)
-    // setSearch('')
     resetState()
+  }
+
+  const secureFetch = async (url: string) => {
+    try {
+      const response = await fetch(url)
+      if (!response.ok) return [null, response.statusText]
+      const data = await response.json()
+      return [data, null]
+    } catch (error) {
+      return [null, error]
+    }
   }
 
   const fetchCharacters = async (nextPage: number) => {
     setLoading(true)
+    setError('')
 
     let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
     if (search) url += `&name=${search}`
     if (species) url += `&species=${species}`
 
-    try {
-      const response = await fetch(url)
-      console.log(response)
-      if (!response.ok) throw Error(response.statusText)
-      const data = await response.json()
-      const chunks = splitToChunks(data.results)
-      setCharacters(chunks)
-      setLastPage(Math.trunc(data.info.count / 5))
-      setApiPage(nextPage)
-      //
-    } catch (error: any) {
-      setError(error)
-      console.log(error)
-      //
-    } finally {
-      setLoading(false)
-    }
+    const [data, err] = await secureFetch(url)
+    if (err) return setError(err)
+
+    const chunks = splitToChunks(data.results)
+    setCharacters(chunks)
+    setLastPage(Math.trunc(data.info.count / 5))
+    setApiPage(nextPage)
+    setLoading(false)
   }
 
   useEffect(() => {

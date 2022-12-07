@@ -9,7 +9,7 @@ const statusIcons = {
 }
 
 const Table = () => {
-  const { characters, page, apiPage } = useCharacters()
+  const { characters, page, apiPage, error } = useCharacters()
 
   const [pageCharacters, setPageCharacters] = useState([])
   const pages = useMemo(() => Array.from({ length: 4 }, (_, i) => i + (apiPage || 1) * 4 - 3), [apiPage])
@@ -19,6 +19,15 @@ const Table = () => {
     if (currentChunk > -1 && characters.length > 0) setPageCharacters(characters[currentChunk])
   }, [page, pages])
 
+  if (error)
+    return (
+      <div className=" flex flex-col justify-center items-center py-44">
+        <div className="relative text-3xl font-semibold">
+          <img className="w-24 absolute -top-28 h-auto" src="https://media2.giphy.com/media/dz6NpfESnqqcnJH1MY/giphy.gif?cid=790b7611ee3e294560ea6c0dc11453ace0fc1e04ad693835&rid=giphy.gif&ct=s" alt="" />
+          {error}
+        </div>
+      </div>
+    )
   return (
     <table className="table-fixed bg-white text-start rounded-lg shadow-xl">
       <thead className="border-b-2 ">
