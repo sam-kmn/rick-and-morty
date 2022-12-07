@@ -23,7 +23,7 @@ const Pagination = () => {
       </div>
     )
     
-  if (page < 3 || page > lastPage - 3)
+  if (page < 3 || page > lastPage - 2)
     return (
       <div className="flex items-center justify-end gap-1">
         <button onClick={decreasePage} className="pagination-button bi bi-chevron-left"></button>
@@ -49,7 +49,8 @@ const Pagination = () => {
         <PaginationButton to={page - 1} />
         <PaginationButton to={page} />
         <PaginationButton to={page + 1} />
-        <PaginationButton to={page + 2} />
+        {page + 2 < lastPage && <PaginationButton to={page + 2} />}
+        
 
         <div className="m-3">...</div>
 
