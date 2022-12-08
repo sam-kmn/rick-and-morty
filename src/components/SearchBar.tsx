@@ -1,7 +1,8 @@
-import { useCharacters } from '../context/useCharacters'
+import useCharacters from '../utils/store'
 
 const SearchBar = () => {
-  const { search, setSearch } = useCharacters()
+  const search = useCharacters((state) => state.search)
+  const setSearch = useCharacters((state) => state.setSearch)
 
   return (
     <div className="flex-1 flex justify-between items-center bg-white border border-secondary-40 rounded-md p-3">

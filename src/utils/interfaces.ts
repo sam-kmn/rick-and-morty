@@ -21,7 +21,7 @@ export interface Character {
   created: string
 }
 
-export interface CharactersContext {
+export interface CharacterStore {
   characters: any[]
   loading: boolean
   error: string
@@ -30,7 +30,9 @@ export interface CharactersContext {
   search: string
   species: string
   apiPage: number | undefined
-  setPage: Dispatch<SetStateAction<number>>
+  resetStore: () => void
+  setPage: (payload: number) => void
   setSearch: (payload: string) => void
-  setSpecies: (payload: string) => void
+  setSpecies: (payload: typeof allSpecies[number]) => void
+  fetchCharacters: (payload: number) => void
 }

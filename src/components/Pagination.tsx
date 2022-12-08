@@ -1,7 +1,10 @@
-import { useCharacters } from '../context/useCharacters'
+import useCharacters from "../utils/store"
 
 const PaginationButton = ({ to }: { to: number }) => {
-  const { page, setPage, lastPage } = useCharacters()
+  const page = useCharacters(state => state.page)
+  const lastPage = useCharacters(state => state.lastPage)
+  const setPage = useCharacters(state => state.setPage)
+
   if (to > lastPage || to < 1) return null
   return (
     <button onClick={() => setPage(to)} className={(to === page ? '!bg-secondary-10' : '') + ' pagination-button'}>
@@ -11,7 +14,9 @@ const PaginationButton = ({ to }: { to: number }) => {
 }
 
 const Pagination = () => {
-  const { page, setPage, lastPage } = useCharacters()
+  const page = useCharacters(state => state.page)
+  const lastPage = useCharacters(state => state.lastPage)
+  const setPage = useCharacters(state => state.setPage)
 
   const increasePage = () => page < lastPage && setPage(page + 1)
   const decreasePage = () => page > 1 && setPage(page - 1)
@@ -19,7 +24,7 @@ const Pagination = () => {
   if (lastPage < 4)
     return (
       <div className="flex items-center justify-end gap-1">
-        {[...Array(3).keys()].map((i: number) => <PaginationButton to={i + 1} />)}
+        {[...Array(3).keys()].map((i: number) => <PaginationButton key={i} to={i + 1} />)}
       </div>
     )
     
@@ -28,11 +33,11 @@ const Pagination = () => {
       <div className="flex items-center justify-end gap-1">
         <button onClick={decreasePage} className="pagination-button bi bi-chevron-left"></button>
 
-        {[...Array(3).keys()].map((i: number) => <PaginationButton to={i + 1} />)}
+        {[...Array(3).keys()].map((i: number) => <PaginationButton key={i} to={i + 1} />)}
 
         <div className="m-3">...</div>
 
-        {[...Array(3).keys()].map((i: number) => <PaginationButton to={lastPage + i - 2} />)}
+        {[...Array(3).keys()].map((i: number) => <PaginationButton key={i} to={lastPage + i - 2} />)}
 
         <button onClick={increasePage} className="pagination-button bi bi-chevron-right"></button>
       </div>

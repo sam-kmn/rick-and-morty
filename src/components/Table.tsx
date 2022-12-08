@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useCharacters } from '../context/useCharacters'
+import useCharacters from '../utils/store'
 import { Character } from '../utils/interfaces'
 
 const statusIcons = {
@@ -9,7 +9,10 @@ const statusIcons = {
 }
 
 const Table = () => {
-  const { characters, page, apiPage, error } = useCharacters()
+  const characters = useCharacters(state => state.characters)
+  const page = useCharacters(state => state.page)
+  const apiPage = useCharacters(state => state.apiPage)
+  const error = useCharacters(state => state.error)
 
   const [pageCharacters, setPageCharacters] = useState([])
   const pages = useMemo(() => Array.from({ length: 4 }, (_, i) => i + (apiPage || 1) * 4 - 3), [apiPage])
@@ -51,7 +54,7 @@ const Table = () => {
                 <p className="text-gray-500">{character.species}</p>
               </td>
               <td>
-                <img src={character.image} alt="" className="w-12 h-12 rounded-xl shadow-xl border-2 border-slate-200 border-dashed" />
+                <img src={character.image} alt="" loading='lazy' className="w-12 h-12 rounded-xl shadow-xl border-2 border-slate-200 border-dashed" />
               </td>
               <td>{character.origin.name}</td>
               <td>{character.gender}</td>
