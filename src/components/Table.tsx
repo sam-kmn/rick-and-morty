@@ -24,7 +24,7 @@ const Table = () => {
 
   if (error)
     return (
-      <div className=" flex flex-col justify-center items-center py-44">
+      <div className="flex-1 flex flex-col justify-center items-center ">
         <div className="relative text-3xl font-semibold">
           <img className="w-24 absolute -top-28 h-auto" src="https://media2.giphy.com/media/dz6NpfESnqqcnJH1MY/giphy.gif?cid=790b7611ee3e294560ea6c0dc11453ace0fc1e04ad693835&rid=giphy.gif&ct=s" alt="" />
           {error}

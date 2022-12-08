@@ -23,7 +23,6 @@ export interface Character {
 
 export interface CharacterStore {
   characters: any[]
-  loading: boolean
   error: string
   page: number
   lastPage: number

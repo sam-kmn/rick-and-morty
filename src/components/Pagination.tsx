@@ -15,12 +15,14 @@ const PaginationButton = ({ to }: { to: number }) => {
 
 const Pagination = () => {
   const page = useCharacters(state => state.page)
-  const lastPage = useCharacters(state => state.lastPage)
   const setPage = useCharacters(state => state.setPage)
+  const lastPage = useCharacters(state => state.lastPage)
+  const error = useCharacters(state => state.error)
 
   const increasePage = () => page < lastPage && setPage(page + 1)
   const decreasePage = () => page > 1 && setPage(page - 1)
-
+  
+  if (error) return null
   if (lastPage < 4)
     return (
       <div className="flex items-center justify-end gap-1">

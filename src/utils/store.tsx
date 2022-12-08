@@ -4,7 +4,6 @@ import { CharacterStore } from './interfaces'
 
 const useCharacters = create<CharacterStore>((set, get) => ({
   characters: [],
-  loading: true,
   error: '',
   page: 1,
   lastPage: 1,
@@ -17,13 +16,12 @@ const useCharacters = create<CharacterStore>((set, get) => ({
   resetStore: () =>
     set({
       page: 1,
+      lastPage: 1,
       apiPage: undefined,
       characters: [],
       error: '',
     }),
   fetchCharacters: async (nextPage: number) => {
-    set({ loading: true })
-
     let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
     if (get().search) url += `&name=${get().search}`
     if (get().species) url += `&species=${get().species}`
@@ -38,10 +36,7 @@ const useCharacters = create<CharacterStore>((set, get) => ({
         lastPage: Math.ceil(data.info.count / 5),
       })
     }
-    set({
-      apiPage: nextPage,
-      loading: false,
-    })
+    set({ apiPage: nextPage })
   },
 }))
 
