@@ -23,7 +23,6 @@ export interface Character {
 
 export interface CharactersContext {
   characters: any[]
-  loading: boolean
   error: string
   page: number
   lastPage: number

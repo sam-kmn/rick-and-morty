@@ -4,7 +4,6 @@ import { CharactersContext } from '../utils/interfaces'
 
 const charactersContext = createContext<CharactersContext>({
   characters: [],
-  loading: true,
   error: '',
   page: 1,
   lastPage: 1,
@@ -18,7 +17,6 @@ const charactersContext = createContext<CharactersContext>({
 
 export const CharactersProvider = ({ children }: { children: ReactNode }) => {
   const [characters, setCharacters] = useState<any>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [page, setPage] = useState(1)
   const [lastPage, setLastPage] = useState(1)
@@ -28,14 +26,13 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
 
   const resetState = () => {
     setPage(1)
+    setLastPage(1)
     setApiPage(undefined)
     setCharacters([])
     setError('')
   }
 
   const fetchCharacters = async (nextPage: number) => {
-    setLoading(true)
-
     let url = `https://rickandmortyapi.com/api/character/?page=${nextPage}`
     if (search) url += `&name=${search}`
     if (species) url += `&species=${species}`
@@ -49,7 +46,6 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
       setLastPage(Math.ceil(data.info.count / 5))
     }
     setApiPage(nextPage)
-    setLoading(false)
   }
 
   useEffect(() => resetState(), [search, species])
@@ -59,7 +55,7 @@ export const CharactersProvider = ({ children }: { children: ReactNode }) => {
     if (apiPage === undefined || nextPage !== apiPage) fetchCharacters(nextPage)
   }, [page, apiPage])
 
-  const providerValues = { characters, loading, error, page, setPage, lastPage, apiPage, search, setSearch, species, setSpecies }
+  const providerValues = { characters, error, page, setPage, lastPage, apiPage, search, setSearch, species, setSpecies }
 
   return <charactersContext.Provider value={providerValues}>{children}</charactersContext.Provider>
 }

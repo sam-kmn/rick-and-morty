@@ -11,11 +11,11 @@ const PaginationButton = ({ to }: { to: number }) => {
 }
 
 const Pagination = () => {
-  const { page, setPage, lastPage } = useCharacters()
+  const { page, setPage, lastPage, error } = useCharacters()
 
   const increasePage = () => page < lastPage && setPage(page + 1)
   const decreasePage = () => page > 1 && setPage(page - 1)
-
+  if (error) return null
   if (lastPage < 4)
     return (
       <div className="flex items-center justify-end gap-1">
