@@ -19,7 +19,7 @@ const Pagination = () => {
   if (lastPage < 4)
     return (
       <div className="flex items-center justify-end gap-1">
-        {[...Array(3).keys()].map((i: number) => <PaginationButton to={i + 1} />)}
+        {[...Array(3).keys()].map((i: number) => <PaginationButton key={i} to={i + 1} />)}
       </div>
     )
     
@@ -28,11 +28,11 @@ const Pagination = () => {
       <div className="flex items-center justify-end gap-1">
         <button onClick={decreasePage} className="pagination-button bi bi-chevron-left"></button>
 
-        {[...Array(3).keys()].map((i: number) => <PaginationButton to={i + 1} />)}
+        {[...Array(3).keys()].map((i: number) => <PaginationButton key={i} to={i + 1} />)}
 
         <div className="m-3">...</div>
 
-        {[...Array(3).keys()].map((i: number) => <PaginationButton to={lastPage + i - 2} />)}
+        {[...Array(3).keys()].map((i: number) => <PaginationButton key={i} to={lastPage + i - 2} />)}
 
         <button onClick={increasePage} className="pagination-button bi bi-chevron-right"></button>
       </div>
