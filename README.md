@@ -10,3 +10,4 @@ I decided I’m going to make two versions with different state management solut
 - `zustand`: This branch uses [Zustand](https://github.com/pmndrs/zustand).
 
 ### [Demo](https://rickandmorty-samkmn.netlify.app/) (for branch `main`)
+### [Demo](https://rickandmorty-zustand.netlify.app/) (for branch `zustand`)
